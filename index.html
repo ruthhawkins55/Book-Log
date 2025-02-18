@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Log</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Book Log</h1>
+    
+    <!-- Add Book Button -->
+    <button id="addBook">Add Book</button>
+
+    <!-- Book List Display -->
+    <ul id="bookList"></ul>
+
+    <!-- Add Book Form -->
+    <form id="add-book-form" style="display:none;">
+        <input type="text" id="book-name-input" placeholder="Enter book name" required />
+        <button type="submit">Add Book</button>
+    </form>
+
+    <!-- Load Firebase Config and Scripts as Modules -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+

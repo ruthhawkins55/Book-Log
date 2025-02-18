@@ -1,0 +1,138 @@
+/* Body background and general styling */
+body {
+    font-family: 'Arial', sans-serif; /* Make sure the text is readable */
+    background-image: url('assets/plain_purple_background_hd_purple.jpg'); /* Path to assets folder */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Ensure full height of the viewport is used */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+}
+
+/* Title Styling */
+#title {
+    font-size: 9em; /* Make the title much bigger */
+    font-family: 'Cursive', sans-serif; /* More stylish font, can be adjusted */
+    font-weight: bold;
+    text-align: center;
+    color: white; /* Make the title white */
+    text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8); /* More pronounced shadow for better visibility */
+    letter-spacing: 4px; /* Add space between letters */
+    text-transform: uppercase; /* Make the title more stylish */
+    margin-top: 0; /* Remove extra margin */
+}
+
+/* Book List Styling */
+#bookList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 40px; /* Space from the title */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Individual Book Styling */
+#bookList li {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 10px;
+    width: 80%; /* Makes the book list take up 80% of the page width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Book title and author */
+#bookList li span {
+    font-size: 1.5em; /* Bigger font for book information */
+    color: #333;
+}
+
+/* Button Styles */
+button {
+    padding: 8px 15px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Add Book Button */
+#addBook {
+    background-color: #6a0dad; /* Dark purple */
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 12px 40px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 1.3em; /* Slightly larger text for better emphasis */
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Add Book button */
+#addBook:hover {
+    background-color: #520d84; /* Lighter dark purple */
+    transform: scale(1.05);
+}
+
+/* Edit and Delete Buttons */
+button.edit, button.delete {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    border-radius: 10px;
+}
+
+button.edit {
+    background-color: #4caf50; /* Green for Edit */
+    color: white;
+}
+
+button.edit:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+button.delete {
+    background-color: #f44336; /* Red for Delete */
+    color: white;
+}
+
+button.delete:hover {
+    background-color: #e53935;
+    transform: scale(1.05);
+}
+
+/* Responsive layout */
+@media screen and (max-width: 600px) {
+    #title {
+        font-size: 6em; /* Slightly smaller title on small screens */
+    }
+
+    #bookList li {
+        flex-direction: column; /* Stack book details on top of each other */
+        align-items: flex-start;
+        width: 100%; /* Full width on small screens */
+    }
+
+    button {
+        width: 100%; /* Make buttons full width on small screens */
+        margin-top: 5px;
+    }
+}
+
+
+
+
