@@ -22,11 +22,26 @@
         <button type="submit">Add Book</button>
     </form>
 
+    <!-- AI Chat Section -->
+    <div id="chat-container">
+        <h2>Chat with AI</h2>
+        <textarea id="chatArea" rows="8" readonly placeholder="AI chat will appear here..."></textarea>
+        <input type="text" id="chatInput" placeholder="Ask AI something..." />
+        <button id="chatBtn">Ask AI</button>
+    </div>
+
+    <!-- Add Google Gemini AI CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai@latest"></script>
+
     <!-- Load Firebase Config and Scripts as Modules -->
-    <script type="module" src="firebase-config.js"></script>
     <script type="module" src="script.js"></script>
+
 </body>
 </html>
+
+
+
+
 
 
 

@@ -1,38 +1,38 @@
 /* Body background and general styling */
 body {
-    font-family: 'Arial', sans-serif; /* Make sure the text is readable */
-    background-image: url('assets/plain_purple_background_hd_purple.jpg'); /* Path to assets folder */
+    font-family: 'Arial', sans-serif;
+    background-image: url('assets/plain_purple_background_hd_purple.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
-    height: 100vh; /* Ensure full height of the viewport is used */
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centers content vertically */
-    align-items: center; /* Centers content horizontally */
+    justify-content: center;
+    align-items: center;
 }
 
 /* Title Styling */
-#title {
-    font-size: 9em; /* Make the title much bigger */
-    font-family: 'Cursive', sans-serif; /* More stylish font, can be adjusted */
+h1 {
+    font-size: 9em;
+    font-family: 'Cursive', sans-serif;
     font-weight: bold;
     text-align: center;
-    color: white; /* Make the title white */
-    text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8); /* More pronounced shadow for better visibility */
-    letter-spacing: 4px; /* Add space between letters */
-    text-transform: uppercase; /* Make the title more stylish */
-    margin-top: 0; /* Remove extra margin */
+    color: white;
+    text-shadow: 5px 5px 20px rgba(0, 0, 0, 0.8);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 0;
 }
 
 /* Book List Styling */
 #bookList {
     list-style-type: none;
     padding: 0;
-    margin-top: 40px; /* Space from the title */
+    margin-top: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -40,21 +40,33 @@ body {
 
 /* Individual Book Styling */
 #bookList li {
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    background: linear-gradient(135deg, #9b59b6, #6a0dad); /* Gradient purple */
     margin: 15px 0;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    width: 80%; /* Makes the book list take up 80% of the page width */
+    width: 80%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: bounce 1s infinite alternate; /* Add bounce animation */
+}
+
+/* Add a subtle bounce animation */
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Book title and author */
 #bookList li span {
-    font-size: 1.5em; /* Bigger font for book information */
-    color: #333;
+    font-size: 1.5em;
+    color: white;
+    font-weight: bold;
 }
 
 /* Button Styles */
@@ -70,7 +82,7 @@ button {
 
 /* Add Book Button */
 #addBook {
-    background-color: #6a0dad; /* Dark purple */
+    background-color: #6a0dad;
     color: white;
     font-weight: bold;
     border-radius: 10px;
@@ -78,13 +90,13 @@ button {
     padding: 12px 40px;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 1.3em; /* Slightly larger text for better emphasis */
+    font-size: 1.3em;
     transition: background-color 0.3s ease;
 }
 
 /* Hover effect for Add Book button */
 #addBook:hover {
-    background-color: #520d84; /* Lighter dark purple */
+    background-color: #520d84;
     transform: scale(1.05);
 }
 
@@ -96,7 +108,7 @@ button.edit, button.delete {
 }
 
 button.edit {
-    background-color: #4caf50; /* Green for Edit */
+    background-color: #4caf50;
     color: white;
 }
 
@@ -106,7 +118,7 @@ button.edit:hover {
 }
 
 button.delete {
-    background-color: #f44336; /* Red for Delete */
+    background-color: #f44336;
     color: white;
 }
 
@@ -115,23 +127,111 @@ button.delete:hover {
     transform: scale(1.05);
 }
 
-/* Responsive layout */
+/* AI Chat Container */
+#chat-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    width: 300px; /* Reduced width */
+    position: fixed; /* Fix position on screen */
+    bottom: 20px; /* Position at the bottom */
+    right: 20px; /* Position on the right */
+    text-align: left;
+    color: white;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* Optional: Adds shadow for better visibility */
+}
+
+/* AI Chat Text Area */
+#chatArea {
+    width: 100%;
+    height: 150px; /* Reduced height */
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+    color: #333;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 1em; /* Reduced font size */
+    overflow-y: auto;
+}
+
+/* User and AI Chat Messages */
+#chatArea div {
+    margin-bottom: 10px;
+    font-size: 1.1em; /* Slightly smaller font size */
+    line-height: 1.5em;
+}
+
+/* User's Message Styling */
+#chatArea .user-message {
+    color: #6a0dad;
+    font-weight: bold;
+}
+
+/* AI's Message Styling */
+#chatArea .ai-message {
+    color: #4caf50;
+    font-weight: normal;
+}
+
+/* Chat Input Field */
+#chatInput {
+    padding: 8px;
+    width: 70%;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+/* Chat Button Styling */
+#chatBtn {
+    padding: 8px 16px;
+    background-color: #6a0dad;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#chatBtn:hover {
+    background-color: #520d84;
+}
+
+/* Mobile Responsiveness */
 @media screen and (max-width: 600px) {
-    #title {
-        font-size: 6em; /* Slightly smaller title on small screens */
+    h1 {
+        font-size: 6em;
     }
 
     #bookList li {
-        flex-direction: column; /* Stack book details on top of each other */
+        flex-direction: column;
         align-items: flex-start;
-        width: 100%; /* Full width on small screens */
+        width: 100%;
     }
 
     button {
-        width: 100%; /* Make buttons full width on small screens */
+        width: 100%;
         margin-top: 5px;
     }
+
+    #chat-container {
+        width: 90%;
+    }
+
+    #chatArea {
+        height: 150px;
+    }
 }
+
+
+
+
+
+
+
 
 
 

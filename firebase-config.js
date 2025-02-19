@@ -20,3 +20,4 @@ const db = getFirestore(app);
 // Export Firestore functions and variables
 export { db, collection, addDoc, getDocs, deleteDoc, doc, updateDoc };
 
+
