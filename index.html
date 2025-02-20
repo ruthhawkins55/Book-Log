@@ -30,14 +30,25 @@
         <button id="chatBtn">Ask AI</button>
     </div>
 
+    <!-- Face Recognition Section -->
+    <div id="face-recognition-container">
+        <h2>Face Recognition</h2>
+        <video id="video" width="640" height="480" autoplay muted></video>
+        <p id="face-status">Waiting for face detection...</p>
+    </div>
+
     <!-- Add Google Gemini AI CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai@latest"></script>
+    
+    <!-- Add face-api.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
     <!-- Load Firebase Config and Scripts as Modules -->
     <script type="module" src="script.js"></script>
 
 </body>
 </html>
+
 
 
 

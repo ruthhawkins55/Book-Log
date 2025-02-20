@@ -83,27 +83,6 @@ async function deleteBook(id) {
     }
 }
 
-// Function to edit a book
-async function editBook(id, title, author, rating) {
-    const newTitle = prompt("Edit book title:", title);
-    const newAuthor = prompt("Edit book author:", author);
-    const newRating = prompt("Rate the book (1-5):", rating);
-
-    if (!newTitle || !newAuthor || isNaN(newRating) || newRating < 1 || newRating > 5) {
-        showFeedback("Invalid input. Book not updated.");
-        return;
-    }
-
-    try {
-        await updateDoc(doc(db, "books", id), { title: newTitle, author: newAuthor, rating: Number(newRating) });
-        fetchBooks();
-        showFeedback("✏️ Book updated successfully!");
-    } catch (error) {
-        console.error("Error updating book:", error);
-        showFeedback("❌ Error updating book.");
-    }
-}
-
 // Function to show feedback messages
 function showFeedback(message) {
     alert(message);
@@ -115,9 +94,9 @@ addBookBtn.addEventListener("click", addBook);
 // Initialize book list
 fetchBooks();
 
-// Function to interact with Google Gemini AI
+// Chatbot Integration with Gemini AI
 async function askGeminiAI(userMessage) {
-    const API_KEY = "AIzaSyBxZHlgtfDjEZk7dNuNlsIasvYoNGRgzQg"; // Use your actual API key here
+    const API_KEY = "AIzaSyBxZHlgtfDjEZk7dNuNlsIasvYoNGRgzQg"; // Secure this in Firestore or .env
     const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
 
     try {
@@ -134,23 +113,10 @@ async function askGeminiAI(userMessage) {
         }
 
         const data = await response.json();
-        console.log("API Response:", data);  // Log the full response for debugging
-
-        // Check if the response is in the expected format
         if (data && data.candidates && data.candidates[0]) {
-            const candidate = data.candidates[0];
-            if (candidate.content) {
-                // Check if the content is an object and convert to string
-                const aiResponse = typeof candidate.content === 'object' ? JSON.stringify(candidate.content) : candidate.content;
-                return aiResponse;  // Return the AI response as a string
-            } else {
-                console.error("Content not found in response", candidate);
-                return "AI response unavailable.";
-            }
-        } else {
-            console.error("Unexpected API response format", data);
-            return "AI response unavailable.";
+            return data.candidates[0].content || "AI response unavailable.";
         }
+        return "AI response unavailable.";
     } catch (error) {
         console.error("Error with Gemini API:", error);
         return "❌ AI error. Please try again later.";
@@ -162,7 +128,7 @@ chatBtn.addEventListener("click", async () => {
     const userInput = chatInput.value.trim();
     if (!userInput) return;
 
-    chatInput.value = ""; // Clear input field
+    chatInput.value = "";
     chatArea.value += `User: ${userInput}\nAI: Thinking...\n`;
 
     try {
@@ -173,29 +139,77 @@ chatBtn.addEventListener("click", async () => {
     }
 });
 
-// AI-Powered Book Recommendations
-async function getBookRecommendations() {
-    const userGenre = prompt("Enter your favorite book genre:");
+// **Google Cloud Vision API Face Authentication**
+async function detectFaceGoogleCloud(imageData) {
+    const API_KEY = "AIzaSyBm1YrMnJtDi7Snm4eGqS_DelyXLiXzbFM"; // Store securely
+    const endpoint = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
 
-    if (!userGenre) {
-        alert("Please enter a genre!");
-        return;
+    const requestBody = {
+        requests: [
+            {
+                image: { content: imageData },
+                features: [{ type: "FACE_DETECTION" }],
+            },
+        ],
+    };
+
+    try {
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody),
+        });
+
+        const data = await response.json();
+        const faceAnnotations = data.responses[0].faceAnnotations;
+        return faceAnnotations && faceAnnotations.length > 0;
+    } catch (error) {
+        console.error("Error with Vision API:", error);
+        return false;
     }
-
-    const aiPrompt = `Suggest 5 great books in the ${userGenre} genre.`;
-    const recommendation = await askGeminiAI(aiPrompt);
-
-    alert(`📚 AI Book Recommendations:\n${recommendation}`);
 }
 
-// Example button to trigger book recommendations
-const recommendBtn = document.createElement("button");
-recommendBtn.textContent = "📖 Get Book Recommendations";
-recommendBtn.style.display = "block";
-recommendBtn.style.margin = "10px 0";
-recommendBtn.onclick = getBookRecommendations;
+// Webcam Setup for Face Recognition
+async function setupFaceRecognition() {
+    const video = document.getElementById("video");
 
-document.body.appendChild(recommendBtn);
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+
+        video.onloadedmetadata = () => {
+            video.play();
+            captureImage(video);
+        };
+    } catch (error) {
+        console.error("Error accessing webcam:", error);
+    }
+}
+
+// Capture Image & Send to Google Vision API
+async function captureImage(video) {
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imageData = canvas.toDataURL("image/jpeg").split(",")[1]; // Convert to Base64
+    const faceDetected = await detectFaceGoogleCloud(imageData);
+
+    document.getElementById("face-status").textContent = faceDetected
+        ? "✅ Face detected!"
+        : "❌ No face detected. Try again.";
+
+    setTimeout(() => captureImage(video), 2000); // Recheck every 2s
+}
+
+// Start Face Recognition on Page Load
+window.onload = () => {
+    setupFaceRecognition();
+};
+
+
 
 
 
