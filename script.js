@@ -114,12 +114,34 @@ async function askGeminiAI(userMessage) {
 
         const data = await response.json();
         if (data && data.candidates && data.candidates[0]) {
-            return data.candidates[0].content || "AI response unavailable.";
+            const aiResponse = data.candidates[0].content || "AI response unavailable.";
+            if (aiResponse.includes("recommend")) {
+                return getBookRecommendation(userMessage); // Return book recommendations if user asks for one
+            }
+            return aiResponse;
         }
         return "AI response unavailable.";
     } catch (error) {
         console.error("Error with Gemini API:", error);
         return "❌ AI error. Please try again later.";
+    }
+}
+
+// Example function to generate book recommendations based on genre or keywords
+function getBookRecommendation(userMessage) {
+    const bookRecommendations = {
+        "fiction": "We recommend 'The Great Gatsby' or 'To Kill a Mockingbird'.",
+        "mystery": "How about 'Gone Girl' or 'The Girl with the Dragon Tattoo'?",
+        "fantasy": "You might enjoy 'The Hobbit' or 'Harry Potter and the Sorcerer's Stone'.",
+        "science fiction": "Try 'Dune' or 'Neuromancer'.",
+        "non-fiction": "Consider reading 'Sapiens' or 'Educated'."
+    };
+
+    const genre = Object.keys(bookRecommendations).find(genre => userMessage.toLowerCase().includes(genre));
+    if (genre) {
+        return bookRecommendations[genre];
+    } else {
+        return "I couldn't find a specific genre, but I recommend '1984' by George Orwell.";
     }
 }
 
@@ -208,6 +230,7 @@ async function captureImage(video) {
 window.onload = () => {
     setupFaceRecognition();
 };
+
 
 
 
