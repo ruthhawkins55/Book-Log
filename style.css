@@ -8,11 +8,12 @@ body {
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100%; /* Ensures the body takes at least full viewport height */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Align content to the top */
     align-items: center;
+    overflow: auto; /* Allow scrolling */
 }
 
 /* Title Styling */
@@ -26,6 +27,7 @@ h1 {
     letter-spacing: 4px;
     text-transform: uppercase;
     margin-top: 0;
+    margin-bottom: 40px; /* Adds space between title and book list */
 }
 
 /* Book List Styling */
@@ -80,6 +82,15 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+/* Book Image Styling */
+#bookList li img {
+    width: 100px; /* Adjust to fit the desired size */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    margin-right: 20px; /* Optional: space between the image and text */
+}
+
 /* Add Book Button */
 #addBook {
     background-color: #6a0dad;
@@ -92,6 +103,8 @@ button {
     text-transform: uppercase;
     font-size: 1.3em;
     transition: background-color 0.3s ease;
+    align-self: center; /* Center the button within its parent container */
+    display: block; /* Ensures the button is a block element, taking up full width for proper centering */
 }
 
 #addBook:hover {
@@ -256,6 +269,8 @@ button.delete:hover {
         width: 100%;
     }
 }
+
+
 
 
 

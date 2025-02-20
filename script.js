@@ -20,7 +20,12 @@ async function fetchBooks() {
         querySnapshot.forEach((bookDoc) => {
             const book = bookDoc.data();
             const li = document.createElement("li");
+
+            // Add book cover image if available
+            const bookCover = book.cover ? `<img src="${book.cover}" alt="Cover of ${book.title}" class="book-cover" />` : "";
+
             li.innerHTML = ` 
+                ${bookCover}
                 <span>${book.title} by ${book.author} (⭐ ${book.rating})</span> 
                 <button class="editBtn" data-id="${bookDoc.id}" data-title="${book.title}" data-author="${book.author}" data-rating="${book.rating}">✏️</button> 
                 <button class="deleteBtn" data-id="${bookDoc.id}">❌</button> 
@@ -57,6 +62,7 @@ async function addBook() {
     const title = prompt("Enter book title:");
     const author = prompt("Enter book author:");
     const rating = prompt("Rate the book (1-5):");
+    const cover = prompt("Enter a URL for the book cover image (optional):");
 
     if (!title || !author || isNaN(rating) || rating < 1 || rating > 5) {
         showFeedback("Invalid input. Please enter valid book details.");
@@ -64,7 +70,7 @@ async function addBook() {
     }
 
     try {
-        await addDoc(collection(db, "books"), { title, author, rating: Number(rating) });
+        await addDoc(collection(db, "books"), { title, author, rating: Number(rating), cover });
         fetchBooks();
         showFeedback("📚 Book added successfully!");
     } catch (error) {
@@ -92,6 +98,7 @@ async function editBook(id, title, author, rating) {
     const newTitle = prompt("Edit book title:", title);
     const newAuthor = prompt("Edit book author:", author);
     const newRating = prompt("Rate the book (1-5):", rating);
+    const newCover = prompt("Enter a new book cover image URL (optional):");
 
     if (!newTitle || !newAuthor || isNaN(newRating) || newRating < 1 || newRating > 5) {
         showFeedback("Invalid input. Book not updated.");
@@ -99,7 +106,7 @@ async function editBook(id, title, author, rating) {
     }
 
     try {
-        await updateDoc(doc(db, "books", id), { title: newTitle, author: newAuthor, rating: Number(newRating) });
+        await updateDoc(doc(db, "books", id), { title: newTitle, author: newAuthor, rating: Number(newRating), cover: newCover });
         fetchBooks();
         showFeedback("✏️ Book updated successfully!");
     } catch (error) {
@@ -310,6 +317,7 @@ recommendBtn.style.margin = "10px 0";
 recommendBtn.onclick = getBookRecommendations;
 
 document.body.appendChild(recommendBtn);
+
 
 
 
