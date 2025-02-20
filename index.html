@@ -5,37 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Log</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Track your books, rate them, and chat with AI for recommendations.">
 </head>
 <body>
 
-    <h1>Book Log</h1>
-    
-    <!-- Add Book Button -->
-    <button id="addBook">Add Book</button>
+    <header>
+        <h1>Book Log</h1>
+    </header>
 
-    <!-- Book List Display -->
-    <ul id="bookList"></ul>
+    <main>
 
-    <!-- Add Book Form -->
-    <form id="add-book-form" style="display:none;">
-        <input type="text" id="book-name-input" placeholder="Enter book name" required />
-        <button type="submit">Add Book</button>
-    </form>
+        <!-- Add Book Button -->
+        <section id="add-book-section">
+            <button id="addBook" aria-label="Add a new book">Add Book</button>
+        </section>
 
-    <!-- AI Chat Section -->
-    <div id="chat-container">
-        <h2>Chat with AI</h2>
-        <textarea id="chatArea" rows="8" readonly placeholder="AI chat will appear here..."></textarea>
-        <input type="text" id="chatInput" placeholder="Ask AI something..." />
-        <button id="chatBtn">Ask AI</button>
-    </div>
+        <!-- Book List Display -->
+        <section id="book-list-section">
+            <ul id="bookList" aria-live="polite"> <!-- aria-live for real-time updates -->
+                <!-- Book list items will be dynamically added here -->
+            </ul>
+        </section>
 
-    <!-- Face Recognition Section -->
-    <div id="face-recognition-container">
-        <h2>Face Recognition</h2>
-        <video id="video" width="640" height="480" autoplay muted></video>
-        <p id="face-status">Waiting for face detection...</p>
-    </div>
+        <!-- Add Book Form -->
+        <section id="add-book-form-section" style="display:none;">
+            <form id="add-book-form">
+                <label for="book-name-input">Enter Book Name:</label>
+                <input type="text" id="book-name-input" placeholder="Enter book name" required />
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+
+        <!-- AI Chat Section -->
+        <section id="chat-container">
+            <h2>Chat with AI</h2>
+            <textarea id="chatArea" rows="8" readonly placeholder="AI chat will appear here..."></textarea>
+            <input type="text" id="chatInput" placeholder="Ask AI something..." aria-label="Type your question" />
+            <button id="chatBtn" aria-label="Ask the AI">Ask AI</button>
+        </section>
+
+        <!-- Face Recognition Section -->
+        <section id="face-recognition-container">
+            <h2>Face Recognition</h2>
+            <div id="consentMessage" style="display:none;">
+                <p>We need your consent to use the camera for face recognition.</p>
+                <button id="consentBtn">Give Consent</button>
+            </div>
+            <video id="video" width="640" height="480" autoplay></video>
+            <p id="face-status">Waiting for face detection...</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Book Log App | Designed by Ruth</p>
+    </footer>
 
     <!-- Add Google Gemini AI CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai@latest"></script>
@@ -48,6 +72,8 @@
 
 </body>
 </html>
+
+
 
 
 

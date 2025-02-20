@@ -6,6 +6,10 @@ const chatBtn = document.getElementById("chatBtn");
 const chatInput = document.getElementById("chatInput");
 const chatArea = document.getElementById("chatArea");
 
+// Your API keys
+const API_KEY_GEMINI = "AIzaSyBxZHlgtfDjEZk7dNuNlsIasvYoNGRgzQg"; // Gemini AI key
+const API_KEY_VISION = "AIzaSyBm1YrMnJtDi7Snm4eGqS_DelyXLiXzbFM"; // Vision API key
+
 // Function to fetch and display books
 async function fetchBooks() {
     bookList.innerHTML = "Loading books..."; // Show loading text
@@ -16,10 +20,10 @@ async function fetchBooks() {
         querySnapshot.forEach((bookDoc) => {
             const book = bookDoc.data();
             const li = document.createElement("li");
-            li.innerHTML = `
-                <span>${book.title} by ${book.author} (⭐ ${book.rating})</span>
-                <button class="editBtn" data-id="${bookDoc.id}" data-title="${book.title}" data-author="${book.author}" data-rating="${book.rating}">✏️</button>
-                <button class="deleteBtn" data-id="${bookDoc.id}">❌</button>
+            li.innerHTML = ` 
+                <span>${book.title} by ${book.author} (⭐ ${book.rating})</span> 
+                <button class="editBtn" data-id="${bookDoc.id}" data-title="${book.title}" data-author="${book.author}" data-rating="${book.rating}">✏️</button> 
+                <button class="deleteBtn" data-id="${bookDoc.id}">❌</button> 
             `;
             bookList.appendChild(li);
         });
@@ -83,6 +87,27 @@ async function deleteBook(id) {
     }
 }
 
+// Function to edit a book
+async function editBook(id, title, author, rating) {
+    const newTitle = prompt("Edit book title:", title);
+    const newAuthor = prompt("Edit book author:", author);
+    const newRating = prompt("Rate the book (1-5):", rating);
+
+    if (!newTitle || !newAuthor || isNaN(newRating) || newRating < 1 || newRating > 5) {
+        showFeedback("Invalid input. Book not updated.");
+        return;
+    }
+
+    try {
+        await updateDoc(doc(db, "books", id), { title: newTitle, author: newAuthor, rating: Number(newRating) });
+        fetchBooks();
+        showFeedback("✏️ Book updated successfully!");
+    } catch (error) {
+        console.error("Error updating book:", error);
+        showFeedback("❌ Error updating book.");
+    }
+}
+
 // Function to show feedback messages
 function showFeedback(message) {
     alert(message);
@@ -94,77 +119,9 @@ addBookBtn.addEventListener("click", addBook);
 // Initialize book list
 fetchBooks();
 
-// Chatbot Integration with Gemini AI
-async function askGeminiAI(userMessage) {
-    const API_KEY = "AIzaSyBxZHlgtfDjEZk7dNuNlsIasvYoNGRgzQg"; // Secure this in Firestore or .env
-    const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
-
-    try {
-        const response = await fetch(endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: userMessage }] }] // Correct request format
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        if (data && data.candidates && data.candidates[0]) {
-            const aiResponse = data.candidates[0].content || "AI response unavailable.";
-            if (aiResponse.includes("recommend")) {
-                return getBookRecommendation(userMessage); // Return book recommendations if user asks for one
-            }
-            return aiResponse;
-        }
-        return "AI response unavailable.";
-    } catch (error) {
-        console.error("Error with Gemini API:", error);
-        return "❌ AI error. Please try again later.";
-    }
-}
-
-// Example function to generate book recommendations based on genre or keywords
-function getBookRecommendation(userMessage) {
-    const bookRecommendations = {
-        "fiction": "We recommend 'The Great Gatsby' or 'To Kill a Mockingbird'.",
-        "mystery": "How about 'Gone Girl' or 'The Girl with the Dragon Tattoo'?",
-        "fantasy": "You might enjoy 'The Hobbit' or 'Harry Potter and the Sorcerer's Stone'.",
-        "science fiction": "Try 'Dune' or 'Neuromancer'.",
-        "non-fiction": "Consider reading 'Sapiens' or 'Educated'."
-    };
-
-    const genre = Object.keys(bookRecommendations).find(genre => userMessage.toLowerCase().includes(genre));
-    if (genre) {
-        return bookRecommendations[genre];
-    } else {
-        return "I couldn't find a specific genre, but I recommend '1984' by George Orwell.";
-    }
-}
-
-// Chatbot Interaction
-chatBtn.addEventListener("click", async () => {
-    const userInput = chatInput.value.trim();
-    if (!userInput) return;
-
-    chatInput.value = "";
-    chatArea.value += `User: ${userInput}\nAI: Thinking...\n`;
-
-    try {
-        const aiResponse = await askGeminiAI(userInput);
-        chatArea.value = chatArea.value.replace("AI: Thinking...\n", `AI: ${aiResponse}\n`);
-    } catch (error) {
-        chatArea.value += "AI: Sorry, an error occurred.\n";
-    }
-});
-
 // **Google Cloud Vision API Face Authentication**
 async function detectFaceGoogleCloud(imageData) {
-    const API_KEY = "AIzaSyBm1YrMnJtDi7Snm4eGqS_DelyXLiXzbFM"; // Store securely
-    const endpoint = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
+    const endpoint = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY_VISION}`;
 
     const requestBody = {
         requests: [
@@ -191,24 +148,46 @@ async function detectFaceGoogleCloud(imageData) {
     }
 }
 
-// Webcam Setup for Face Recognition
+// Webcam Setup for Face Recognition with User Consent
 async function setupFaceRecognition() {
     const video = document.getElementById("video");
+    const consentMessage = document.getElementById("consentMessage");
 
-    try {
+    if (localStorage.getItem('hasGivenConsent') === 'true') {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
+        video.style.display = "block";
 
         video.onloadedmetadata = () => {
             video.play();
-            captureImage(video);
+            captureImage(video); // Start face detection once video starts playing
         };
-    } catch (error) {
-        console.error("Error accessing webcam:", error);
+    } else {
+        consentMessage.style.display = "block";
+
+        document.getElementById("consentBtn").addEventListener("click", async () => {
+            localStorage.setItem('hasGivenConsent', 'true');
+            consentMessage.style.display = "none";
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.style.display = "block";
+                video.onloadedmetadata = () => {
+                    video.play();
+                    captureImage(video); // Start face detection once video starts playing
+                };
+            } catch (error) {
+                console.error("Error accessing webcam:", error);
+                alert("Failed to access camera.");
+            }
+        });
     }
 }
 
 // Capture Image & Send to Google Vision API
+let detectionInterval;
+
 async function captureImage(video) {
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
@@ -223,46 +202,114 @@ async function captureImage(video) {
         ? "✅ Face detected!"
         : "❌ No face detected. Try again.";
 
-    setTimeout(() => captureImage(video), 2000); // Recheck every 2s
+    if (faceDetected) {
+        clearInterval(detectionInterval); // Stop the loop once face is detected
+        showLoginSuccess(); // Trigger login success
+        stopVideoStream(video); // Hide the video stream and stop webcam
+    } else {
+        detectionInterval = setTimeout(() => captureImage(video), 2000); // Continue detecting every 2 seconds
+    }
 }
 
-// Start Face Recognition on Page Load
-window.onload = () => {
-    setupFaceRecognition();
-};
+// Function to show login success and stop face recognition
+function showLoginSuccess() {
+    const successMessage = document.createElement("div");
+    successMessage.id = "login-success";
+    successMessage.innerHTML = "<h2>You are logged in!</h2>";
+    document.body.appendChild(successMessage);
+    console.log("User authenticated successfully!");
+}
 
+// Function to stop the video stream and hide the camera
+function stopVideoStream(video) {
+    const stream = video.srcObject;
+    const tracks = stream.getTracks();
+    tracks.forEach(track => track.stop());
+    video.style.display = "none";
+}
 
+setupFaceRecognition();
 
+// **Gemini AI Chatbot Interaction**
+async function askGeminiAI(userMessage) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY_GEMINI}`;
 
+    try {
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: userMessage }] }] // Correct request format
+            })
+        });
 
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
 
+        const data = await response.json();
+        console.log("API Response:", data);  // Log the full response for debugging
 
+        // Check if the response is in the expected format
+        if (data && data.candidates && data.candidates[0]) {
+            const candidate = data.candidates[0];
+            if (candidate.content) {
+                // Check if the content is an object and convert to string
+                const aiResponse = typeof candidate.content === 'object' ? JSON.stringify(candidate.content) : candidate.content;
+                return aiResponse;  // Return the AI response as a string
+            } else {
+                console.error("Content not found in response", candidate);
+                return "AI response unavailable.";
+            }
+        } else {
+            console.error("Unexpected API response format", data);
+            return "AI response unavailable.";
+        }
+    } catch (error) {
+        console.error("Error with Gemini API:", error);
+        return "❌ AI error. Please try again later.";
+    }
+}
 
+// Chatbot Interaction
+chatBtn.addEventListener("click", async () => {
+    const userInput = chatInput.value.trim();
+    if (!userInput) return;
 
+    chatInput.value = ""; // Clear input field
+    chatArea.value += `User: ${userInput}\nAI: Thinking...\n`;
 
+    try {
+        const aiResponse = await askGeminiAI(userInput);
+        chatArea.value = chatArea.value.replace("AI: Thinking...\n", `AI: ${aiResponse}\n`);
+    } catch (error) {
+        chatArea.value += "AI: Sorry, an error occurred.\n";
+    }
+});
 
+// AI-Powered Book Recommendations
+async function getBookRecommendations() {
+    const userGenre = prompt("Enter your favorite book genre:");
 
+    if (!userGenre) {
+        alert("Please enter a genre!");
+        return;
+    }
 
+    const aiPrompt = `Suggest 5 great books in the ${userGenre} genre.`;
+    const recommendation = await askGeminiAI(aiPrompt);
 
+    alert(`📚 AI Book Recommendations:\n${recommendation}`);
+}
 
+// Example button to trigger book recommendations
+const recommendBtn = document.createElement("button");
+recommendBtn.textContent = "📖 Get Book Recommendations";
+recommendBtn.style.display = "block";
+recommendBtn.style.margin = "10px 0";
+recommendBtn.onclick = getBookRecommendations;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+document.body.appendChild(recommendBtn);
 
 
 
