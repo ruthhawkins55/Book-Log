@@ -8,12 +8,12 @@ body {
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
-    min-height: 100%; /* Ensures the body takes at least full viewport height */
+    min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Align content to the top */
+    justify-content: flex-start;
     align-items: center;
-    overflow: auto; /* Allow scrolling */
+    overflow: auto;
 }
 
 /* Title Styling */
@@ -27,7 +27,7 @@ h1 {
     letter-spacing: 4px;
     text-transform: uppercase;
     margin-top: 0;
-    margin-bottom: 40px; /* Adds space between title and book list */
+    margin-bottom: 40px;
 }
 
 /* Book List Styling */
@@ -38,6 +38,17 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+ 
+/* Book Image Styling */
+#bookList li img {
+    width: 100px; /* Ensure a fixed width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 150px; /* Set a maximum height */
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    margin-right: 20px; /* Space between image and text */
+    object-fit: cover; /* Ensures image doesn't stretch */
 }
 
 /* Individual Book Styling */
@@ -82,15 +93,6 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Book Image Styling */
-#bookList li img {
-    width: 100px; /* Adjust to fit the desired size */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    margin-right: 20px; /* Optional: space between the image and text */
-}
-
 /* Add Book Button */
 #addBook {
     background-color: #6a0dad;
@@ -103,8 +105,8 @@ button {
     text-transform: uppercase;
     font-size: 1.3em;
     transition: background-color 0.3s ease;
-    align-self: center; /* Center the button within its parent container */
-    display: block; /* Ensures the button is a block element, taking up full width for proper centering */
+    align-self: center;
+    display: block;
 }
 
 #addBook:hover {
@@ -112,34 +114,7 @@ button {
     transform: scale(1.05);
 }
 
-/* Edit and Delete Buttons */
-button.edit, button.delete {
-    padding: 10px 20px;
-    font-size: 1.2em;
-    border-radius: 10px;
-}
-
-button.edit {
-    background-color: #4caf50;
-    color: white;
-}
-
-button.edit:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
-}
-
-button.delete {
-    background-color: #f44336;
-    color: white;
-}
-
-button.delete:hover {
-    background-color: #e53935;
-    transform: scale(1.05);
-}
-
-/* AI Chat Container */
+/* Chat Section */
 #chat-container {
     background-color: rgba(0, 0, 0, 0.7);
     padding: 15px;
@@ -147,11 +122,35 @@ button.delete:hover {
     width: 300px;
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: -320px;
     text-align: left;
     color: white;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
 }
+
+/* Chat Button */
+/* Chat Button (The tab to open/close chat) */
+#chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #6a0dad;
+    color: white;
+    border-radius: 50%;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 2em; /* Increase the font size for better visibility */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Make sure it's on top of other content */
+}
+
+/* Hover effect for the toggle button */
+#chat-toggle:hover {
+    background-color: #520d84;
+    transform: scale(1.05);
+}
+
 
 /* AI Chat Text Area */
 #chatArea {
@@ -166,25 +165,6 @@ button.delete:hover {
     resize: none;
     font-size: 1em;
     overflow-y: auto;
-}
-
-/* User and AI Chat Messages */
-#chatArea div {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    line-height: 1.5em;
-}
-
-/* User's Message Styling */
-#chatArea .user-message {
-    color: #6a0dad;
-    font-weight: bold;
-}
-
-/* AI's Message Styling */
-#chatArea .ai-message {
-    color: #4caf50;
-    font-weight: normal;
 }
 
 /* Chat Input Field */
@@ -213,7 +193,7 @@ button.delete:hover {
 }
 
 /* Webcam & Face Recognition Styles */
-#face-container {
+#face-recognition-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -235,11 +215,6 @@ button.delete:hover {
     color: white;
 }
 
-/* Hide face recognition elements after success */
-.hidden {
-    display: none !important;
-}
-
 /* Mobile Responsiveness */
 @media screen and (max-width: 600px) {
     h1 {
@@ -259,16 +234,20 @@ button.delete:hover {
 
     #chat-container {
         width: 90%;
+        right: -320px;
     }
 
     #chatArea {
         height: 150px;
     }
 
-    #video {
-        width: 100%;
+    #chat-toggle {
+        bottom: 80px;
+        right: 20px;
     }
 }
+
+
 
 
 

@@ -6,6 +6,55 @@
     <title>Book Log</title>
     <link rel="stylesheet" href="style.css">
     <meta name="description" content="Track your books, rate them, and chat with AI for recommendations.">
+    <style>
+        /* Floating AI Chat Button */
+        #chatToggleBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Chat Container Styling */
+        #chat-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        /* Mobile and small screen responsive */
+        @media (max-width: 600px) {
+            #chat-container {
+                bottom: 70px;
+                right: 10px;
+                width: 260px;
+            }
+
+            #chatToggleBtn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -22,7 +71,7 @@
 
         <!-- Book List Display -->
         <section id="book-list-section">
-            <ul id="bookList" aria-live="polite"> <!-- aria-live for real-time updates -->
+            <ul id="bookList" aria-live="polite">
                 <!-- Book list items will be dynamically added here -->
             </ul>
         </section>
@@ -37,7 +86,7 @@
         </section>
 
         <!-- AI Chat Section -->
-        <section id="chat-container">
+        <section id="chat-container" aria-hidden="true">
             <h2>Chat with AI</h2>
             <textarea id="chatArea" rows="8" readonly placeholder="AI chat will appear here..."></textarea>
             <input type="text" id="chatInput" placeholder="Ask AI something..." aria-label="Type your question" />
@@ -61,6 +110,9 @@
         <p>&copy; 2025 Book Log App | Designed by Ruth</p>
     </footer>
 
+    <!-- Floating Button to toggle AI chat -->
+    <button id="chatToggleBtn" aria-label="Toggle AI chat">💬</button>
+
     <!-- Add Google Gemini AI CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai@latest"></script>
     
@@ -70,8 +122,30 @@
     <!-- Load Firebase Config and Scripts as Modules -->
     <script type="module" src="script.js"></script>
 
+    <script>
+        // Toggle AI Chat visibility
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Show or hide chat container on button click
+        chatToggleBtn.addEventListener('click', () => {
+            if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
+                chatContainer.style.display = 'block';
+            } else {
+                chatContainer.style.display = 'none';
+            }
+        });
+
+        // Show the toggle button when the page is loaded
+        window.onload = () => {
+            chatToggleBtn.style.display = 'block';
+        };
+    </script>
+
 </body>
 </html>
+
+
 
 
 
