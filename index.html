@@ -12,9 +12,9 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+            background-color: #6A0DAD; /* Dark purple */
+            color: white; /* High contrast */
+            border: 2px solid white; /* Adds definition */
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -23,6 +23,12 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Slight shadow for depth */
+            transition: background-color 0.3s ease;
+        }
+
+        #chatToggleBtn:hover {
+            background-color: #8A2BE2; /* Lighter purple on hover */
         }
 
         /* Chat Container Styling */
@@ -54,6 +60,29 @@
                 font-size: 20px;
             }
         }
+
+        /* Face Recognition Styling */
+        #face-recognition-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px; /* Adds space below the face recognition section */
+        }
+
+        #video {
+            border: 2px solid #6A0DAD;
+            margin-top: 10px;
+        }
+
+        #consentMessage {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #face-status {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -64,14 +93,25 @@
 
     <main>
 
+        <!-- Face Recognition Section (Moved here) -->
+        <section id="face-recognition-container">
+            <h2>Face Recognition</h2>
+            <div id="consentMessage" style="display:none;">
+                <p>We need your consent to use the camera for face recognition.</p>
+                <button id="consentBtn">Give Consent</button>
+            </div>
+            <video id="video" width="640" height="480" autoplay></video>
+            <p id="face-status">Waiting for face detection...</p>
+        </section>
+
         <!-- Add Book Button -->
         <section id="add-book-section">
-            <button id="addBook" aria-label="Add a new book">Add Book</button>
+            <button id="addBook" aria-label="Add a new book">Add New Book</button>
         </section>
 
         <!-- Book List Display -->
         <section id="book-list-section">
-            <ul id="bookList" aria-live="polite">
+            <ul id="bookList">
                 <!-- Book list items will be dynamically added here -->
             </ul>
         </section>
@@ -80,7 +120,7 @@
         <section id="add-book-form-section" style="display:none;">
             <form id="add-book-form">
                 <label for="book-name-input">Enter Book Name:</label>
-                <input type="text" id="book-name-input" placeholder="Enter book name" required />
+                <input type="text" id="book-name-input" placeholder="Enter book name" required aria-labelledby="book-name-label"/>
                 <button type="submit">Add Book</button>
             </form>
         </section>
@@ -91,17 +131,6 @@
             <textarea id="chatArea" rows="8" readonly placeholder="AI chat will appear here..."></textarea>
             <input type="text" id="chatInput" placeholder="Ask AI something..." aria-label="Type your question" />
             <button id="chatBtn" aria-label="Ask the AI">Ask AI</button>
-        </section>
-
-        <!-- Face Recognition Section -->
-        <section id="face-recognition-container">
-            <h2>Face Recognition</h2>
-            <div id="consentMessage" style="display:none;">
-                <p>We need your consent to use the camera for face recognition.</p>
-                <button id="consentBtn">Give Consent</button>
-            </div>
-            <video id="video" width="640" height="480" autoplay></video>
-            <p id="face-status">Waiting for face detection...</p>
         </section>
 
     </main>
@@ -140,10 +169,47 @@
         window.onload = () => {
             chatToggleBtn.style.display = 'block';
         };
+
+        // Add face recognition functionality
+        const video = document.getElementById('video');
+        const consentMessage = document.getElementById('consentMessage');
+        const consentBtn = document.getElementById('consentBtn');
+        const faceStatus = document.getElementById('face-status');
+
+        consentBtn.addEventListener('click', () => {
+            consentMessage.style.display = 'none';
+            startFaceRecognition();
+        });
+
+        async function startFaceRecognition() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            video.srcObject = stream;
+
+            // Load face-api.js models
+            await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+            await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+            await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+
+            detectFace();
+        }
+
+        async function detectFace() {
+            const detections = await faceapi.detectAllFaces(video).withFaceLandmarks().withFaceDescriptors();
+            if (detections.length > 0) {
+                faceStatus.textContent = 'Face detected!';
+            } else {
+                faceStatus.textContent = 'No face detected.';
+            }
+            setTimeout(detectFace, 1000);
+        }
     </script>
 
 </body>
 </html>
+
+
+
+
 
 
 
