@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Firestore import
+import { getFirestore, doc, getDoc } from 'firebase/firestore'; 
 
-const db = getFirestore(); // Firestore database reference
+const db = getFirestore(); 
 let genAI, model;
 
 async function getApiKey() {

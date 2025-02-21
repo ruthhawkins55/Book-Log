@@ -1,4 +1,4 @@
-import { db, collection, getDocs, doc, addDoc, deleteDoc, updateDoc } from "./firebase-config.js"; // Import Firestore methods
+import { db, collection, getDocs, doc, addDoc, deleteDoc, updateDoc } from "./firebase-config.js"; 
 
 const bookList = document.getElementById("bookList");
 const addBookBtn = document.getElementById("addBook");
@@ -6,17 +6,17 @@ const chatBtn = document.getElementById("chatBtn");
 const chatInput = document.getElementById("chatInput");
 const chatArea = document.getElementById("chatArea");
 
-// Your API keys
+//API keys
 const API_KEY_GEMINI = "AIzaSyBxZHlgtfDjEZk7dNuNlsIasvYoNGRgzQg"; // Gemini AI key
 const API_KEY_VISION = "AIzaSyBm1YrMnJtDi7Snm4eGqS_DelyXLiXzbFM"; // Vision API key
 
 // Function to fetch and display books
 async function fetchBooks() {
-    bookList.innerHTML = "Loading books..."; // Show loading text
+    bookList.innerHTML = "Loading books..."; 
 
     try {
         const querySnapshot = await getDocs(collection(db, "books"));
-        bookList.innerHTML = ""; // Clear after fetching
+        bookList.innerHTML = ""; 
         querySnapshot.forEach((bookDoc) => {
             const book = bookDoc.data();
             const li = document.createElement("li");
@@ -33,7 +33,7 @@ async function fetchBooks() {
             bookList.appendChild(li);
         });
 
-        attachEventListeners(); // Attach edit/delete events
+        attachEventListeners(); 
     } catch (error) {
         console.error("Error fetching books:", error);
         bookList.innerHTML = "Error loading books. Try again.";
@@ -167,7 +167,7 @@ async function setupFaceRecognition() {
 
         video.onloadedmetadata = () => {
             video.play();
-            captureImage(video); // Start face detection once video starts playing
+            captureImage(video); 
         };
     } else {
         consentMessage.style.display = "block";
@@ -182,7 +182,7 @@ async function setupFaceRecognition() {
                 video.style.display = "block";
                 video.onloadedmetadata = () => {
                     video.play();
-                    captureImage(video); // Start face detection once video starts playing
+                    captureImage(video); 
                 };
             } catch (error) {
                 console.error("Error accessing webcam:", error);
@@ -202,7 +202,7 @@ async function captureImage(video) {
     const ctx = canvas.getContext("2d");
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const imageData = canvas.toDataURL("image/jpeg").split(",")[1]; // Convert to Base64
+    const imageData = canvas.toDataURL("image/jpeg").split(",")[1]; 
     const faceDetected = await detectFaceGoogleCloud(imageData);
 
     document.getElementById("face-status").textContent = faceDetected
@@ -210,11 +210,11 @@ async function captureImage(video) {
         : "❌ No face detected. Try again.";
 
     if (faceDetected) {
-        clearInterval(detectionInterval); // Stop the loop once face is detected
+        clearInterval(detectionInterval); 
         showLoginSuccess(); // Trigger login success
         stopVideoStream(video); // Hide the video stream and stop webcam
     } else {
-        detectionInterval = setTimeout(() => captureImage(video), 2000); // Continue detecting every 2 seconds
+        detectionInterval = setTimeout(() => captureImage(video), 2000); 
     }
 }
 
@@ -246,7 +246,7 @@ async function askGeminiAI(userMessage) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: userMessage }] }] // Correct request format
+                contents: [{ parts: [{ text: userMessage }] }] 
             })
         });
 
@@ -255,15 +255,15 @@ async function askGeminiAI(userMessage) {
         }
 
         const data = await response.json();
-        console.log("API Response:", data);  // Log the full response for debugging
+        console.log("API Response:", data);  
 
-        // Check if the response is in the expected format
+        
         if (data && data.candidates && data.candidates[0]) {
             const candidate = data.candidates[0];
             if (candidate.content) {
-                // Check if the content is an object and convert to string
+                
                 const aiResponse = typeof candidate.content === 'object' ? JSON.stringify(candidate.content) : candidate.content;
-                return aiResponse;  // Return the AI response as a string
+                return aiResponse;  
             } else {
                 console.error("Content not found in response", candidate);
                 return "AI response unavailable.";
@@ -283,7 +283,7 @@ chatBtn.addEventListener("click", async () => {
     const userInput = chatInput.value.trim();
     if (!userInput) return;
 
-    chatInput.value = ""; // Clear input field
+    chatInput.value = ""; 
     chatArea.value += `User: ${userInput}\nAI: Thinking...\n`;
 
     try {
@@ -309,7 +309,7 @@ async function getBookRecommendations() {
     alert(`📚 AI Book Recommendations:\n${recommendation}`);
 }
 
-// Example button to trigger book recommendations
+// button to trigger book recommendations
 const recommendBtn = document.createElement("button");
 recommendBtn.textContent = "📖 Get Book Recommendations";
 recommendBtn.style.display = "block";

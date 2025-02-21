@@ -1,27 +1,27 @@
 module.exports = {
     mode: 'production',
-    entry: './script.js',  // Point to your script.js file as the entry
+    entry: './script.js',  
     output: {
       path: __dirname + '/dist',
-      filename: 'bundle.js',  // The output bundled JavaScript file
+      filename: 'bundle.js',  
     },
     module: {
       rules: [
         {
           test: /\.html$/,
-          use: 'html-loader',  // Process HTML files
+          use: 'html-loader',  
         },
       ],
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './index.html',  // Use index.html as the template
+        template: './index.html',  
       }),
     ],
     externals: {
       'firebase/app': 'firebase',
       'firebase/firestore': 'firebase.firestore',
-      'face-api.js': 'faceapi',  // If you're using face-api.js as a global object
+      'face-api.js': 'faceapi',  
     },
   };
   

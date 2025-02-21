@@ -33,14 +33,6 @@ h1 {
     margin-bottom: 40px;
 }
 
-
-
-
-
-
-
-
-
 /* Book List Styling */
 #bookList {
     list-style-type: none;
@@ -171,12 +163,12 @@ button {
     margin-top: 10px;
     font-size: 1.5em;
     font-weight: bold;
-    color: white; /* Keep white for readability */
-    background-color: rgba(0, 255, 0, 0.8); /* Bright green with slight transparency */
+    color: white; 
+    background-color: rgba(0, 255, 0, 0.8); 
     padding: 10px 20px;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for emphasis */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); 
 }
 
 
