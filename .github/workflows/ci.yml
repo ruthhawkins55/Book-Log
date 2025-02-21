@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '14'  # Consider upgrading to v16 or v18 if needed
 
       - name: Install dependencies
         run: npm install
@@ -34,9 +34,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  # Ensure consistency with lint job
         with:
-          node-version: '14'
+          node-version: '14'  # Upgrade to v16 or v18 if needed
 
       - name: Install dependencies
         run: npm install
@@ -52,9 +52,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  
         with:
-          node-version: '14'
+          node-version: '14'  
 
       - name: Install dependencies
         run: npm install
@@ -69,3 +69,4 @@ jobs:
           folder: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
