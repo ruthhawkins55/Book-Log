@@ -1,18 +1,25 @@
-const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './index.html', // Replace with the actual entry file of your app
+  mode: 'production',
+  entry: './src/index.js',  // Make sure your entry point is correct
   output: {
-    filename: 'bundle.js', // Name of the output file
-    path: path.resolve(__dirname, 'dist'), // Output directory
+    path: __dirname + '/dist',
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: 'babel-loader', // Use Babel for JS transpilation
+        test: /\.html$/,
+        use: 'html-loader',  // This loader will process HTML files
       },
+      // Add other loaders as needed (e.g., for CSS, JS, etc.)
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',  // Your HTML file template
+    }),
+  ],
 };
+

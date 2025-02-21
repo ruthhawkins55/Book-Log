@@ -40,6 +40,6 @@ Follow the steps for GitHub Pages deployment for your repository.
 Push the changes to GitHub and enable GitHub Pages in the repository settings to make the app live.
 
 ### Live Site
-You can access the live version of the app here:
+You can access the live version of the app here: https://ruthhawkins55.github.io/Book-Log/
 
 
