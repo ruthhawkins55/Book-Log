@@ -69,4 +69,6 @@ jobs:
           folder: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true  # This will allow the pipeline to continue even if deploy fails
+
 
