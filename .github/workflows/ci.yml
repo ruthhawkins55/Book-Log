@@ -20,8 +20,10 @@ jobs:
         with:
           node-version: '14'  # Consider upgrading to v16 or v18 if needed
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clear npm cache and install dependencies
+        run: |
+          npm cache clean --force
+          npm install
 
       - name: Run Linting
         run: npm run lint
@@ -38,8 +40,10 @@ jobs:
         with:
           node-version: '14'  # Upgrade to v16 or v18 if needed
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clear npm cache and install dependencies
+        run: |
+          npm cache clean --force
+          npm install
 
       - name: Run Tests
         run: npm test
@@ -56,8 +60,10 @@ jobs:
         with:
           node-version: '14'  
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clear npm cache and install dependencies
+        run: |
+          npm cache clean --force
+          npm install
 
       - name: Build the app for production
         run: npm run build
@@ -70,5 +76,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true  # This will allow the pipeline to continue even if deploy fails
+
 
 
